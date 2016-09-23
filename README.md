@@ -38,7 +38,7 @@ public class Test {
 
 }
 ```
-![Some Examples](http://i.hizliresim.com/nEbBLl.png)
+![Some Examples](http://i.hizliresim.com/E3OZDg.png)
 ## Dependencies
 There is no external dependencies.
 
@@ -110,3 +110,4 @@ This project is published under MIT license. Please do not forget to give credit
 Other implementations:
 
 - [Python Implementation](https://github.com/TurkSufFixer/TurkSufFixer-Python)
+- [C# Implementation](https://github.com/TurkSufFixer/TurkSufFixer-CSharp)
