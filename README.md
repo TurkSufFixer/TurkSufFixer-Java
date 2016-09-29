@@ -1,6 +1,6 @@
 ![headline](http://i.hizliresim.com/lEbkol.png)
 
-_Turk**Suf**Fixer_ is a Java library for creating Turkish dynamic messages. Turkish language has a very complex derivational and inflectional morphology. Thus, it is hard to generate dynamic messages like "location + DA" because "DA" (Locative suffix) can be "de", "te", "ta", "nde" or "nda"  with respect to vowels and consonants in the noun (vowel harmnoy rule). This library handles these problems:
+_Turk**Suf**Fixer_ is a Java library for creating Turkish dynamic messages. Turkish language has a very complex derivational and inflectional morphology. Thus, it is hard to generate dynamic messages like "location + DA" because "DA" (Locative suffix) can be "de", "te", "ta", "nde" or "nda"  with respect to vowels and consonants in the noun (vowel harmony rule). This library handles these problems:
 
  - **Simplest way possible:** No morphological analysis, no finite state machine stuff
  - **No installation:** You don't need install anything, just take and use it
@@ -53,7 +53,7 @@ Followings are covered:
  - Numbers
  - Exceptional words (i.e. alkol, santral) handling
  - Foreign originated words (only valid for words that in others dictionary, see Dictionaries section)
- - Words that go under vowel ellipsis* (i.e. "omuz")*
+ - Words that go under vowel ellipsis (i.e. "omuz")*
  - Nouns that follow consonant harmony (i.e. “Çalışma Bakanlığı”)*
  - Words that have irregular third person singular form (i.e. “sanayii”)*
  - Abbreviations
