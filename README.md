@@ -5,7 +5,7 @@ _Turk**Suf**Fixer_ is a Java library for creating Turkish dynamic messages. Turk
  - **Simplest way possible:** No morphological analysis, no finite state machine stuff
  - **No installation:** You don't need install anything, just take and use it
 
-We support *"Accusative", "Dative", "Locative" or "Ablative"* cases. Since no morphological analysis is done, sometimes it is not possible to find correct form of suffix. Although it is rare to encounter this condition, we mentioned what it is in the scope of library and what not in further sections.  
+We support *"Accusative" (-i hali), "Dative" (-e hali), "Locative" (-de hali), "Ablative" (-den hali) and "Genitive" (-in)* cases. Since no morphological analysis is done, sometimes it is not possible to find correct form of suffix. Although it is rare to encounter this condition, we mentioned what it is in the scope of library and what not in further sections.  
 
 ## Some Problematic Examples
 ![examples](http://i.hizliresim.com/D3WOk3.png)
@@ -80,6 +80,7 @@ excluded)*
  - **makeDative(name,apostrophe)**
  - **makeLocative(name,apostrophe)**
  - **makeAblative(name,apostrophe)**
+ - **makeGenitive(name,apostrophe)**
  - **makeInstrumental(name,apostrophe)** *(limited functionality)*
  - **makePlural(name,apostrophe)** *(limited functionality)*
 

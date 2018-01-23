@@ -15,15 +15,15 @@ import java.util.regex.*;
 public class TurkSufFixer {
 	
 	public  static final List<String> suffixes = Arrays.asList(Suffixes.ACC,Suffixes.DAT,Suffixes.LOC,
-															   Suffixes.ABL,Suffixes.INS,Suffixes.PLU);
-    private static final String vowels = "aıuoeiüöâûô";
+															   Suffixes.ABL,Suffixes.INS,Suffixes.PLU, Suffixes.GEN);
+    private static final String vowels = "aıuoeiüö";
     //private static final String backvowels = "aıuo";
-    private static final String frontvowels = "eiüöâûô";
+    private static final String frontvowels = "eiüö";
     private static final String backunrounded = "aı";
     private static final String backrounded = "uo";
-    private static final String frontunrounded = "eiâ";
-    private static final String frontrounded = "üöûô";
-    private static final String roundedvowels = "uoüöûô";
+    private static final String frontunrounded = "ei";
+    private static final String frontrounded = "üö";
+    private static final String roundedvowels = "uoüö";
     private static final String hardconsonant = "fstkçşhp";
     private static final String H = "ıiuü";
     private static final String[] numbers = {"sıfır","bir","iki","üç","dört","beş","altı","yedi","sekiz","dokuz" };
@@ -227,7 +227,7 @@ public class TurkSufFixer {
     public String makeDative(String name) throws SuffixException{
     	return constructName(name, Suffixes.DAT, true);
     }
-    public String makeDattive(String name, Boolean apostrophe) throws SuffixException{
+    public String makeDative(String name, Boolean apostrophe) throws SuffixException{
     	return constructName(name, Suffixes.DAT, apostrophe);
     }
     public String makeLocative(String name) throws SuffixException{
@@ -235,6 +235,12 @@ public class TurkSufFixer {
     }
     public String makeLocative(String name, Boolean apostrophe) throws SuffixException{
     	return constructName(name, Suffixes.LOC, apostrophe);
+    }
+    public String makeGenitive(String name) throws SuffixException{
+    	return constructName(name, Suffixes.GEN, true);
+    }
+    public String makeGenitive(String name, Boolean apostrophe) throws SuffixException{
+    	return constructName(name, Suffixes.GEN, apostrophe);
     }
     public String makeAblative(String name) throws SuffixException{
     	return constructName(name, Suffixes.ABL, true);
@@ -301,8 +307,11 @@ public class TurkSufFixer {
     	{
     		lastVowel = Character.toString(name.charAt(i));
     	}
-    	if (suffix.endsWith("H")){
+    	if (suffix.contains("H")){
     		suffix = suffix.replace('H', findReplacement(lastVowel, soft));
+    		if (rawsuffix.equals(Suffixes.GEN) && 'n' != suffix.charAt(0) && vowels.contains(name.substring(name.length() - 1))){
+    			suffix = "n" + suffix;
+    		}
     	}
     	else
     	{
@@ -318,6 +327,8 @@ public class TurkSufFixer {
     		else{
     			suffix = suffix.replace('D', 'd');
     		}	
+    		
+    		
     	}
     	
     	if (vowels.contains(lastLetter) && 
@@ -387,8 +398,10 @@ public class TurkSufFixer {
         public static final String DAT = "A";
         public static final String LOC = "DA";
         public static final String ABL = "DAn";
+        public static final String GEN = "Hn";
         public static final String INS = "lA";
         public static final String PLU = "lAr";
+        
     }
 }
 
