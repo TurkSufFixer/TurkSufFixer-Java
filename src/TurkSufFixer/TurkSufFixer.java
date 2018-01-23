@@ -86,7 +86,7 @@ public class TurkSufFixer {
 				}
 				else{
 					
-					others.put(line, line + 'e');
+					others.put(line, line + (line.endsWith("k") ? 'a' : 'e'));
 				}
 			}
 			dictionary.addAll(others.keySet());
@@ -303,8 +303,8 @@ public class TurkSufFixer {
     	String lastVowel;
     	int i = findLastVowel(name);
     	if (i == -1){
-    		lastVowel  = "e";
-    		lastLetter = "e";
+    		lastVowel  = name.endsWith("k") ? "a" : "e";
+    		lastLetter = name.endsWith("k") ? "a" : "e";
     	}
     	else
     	{
