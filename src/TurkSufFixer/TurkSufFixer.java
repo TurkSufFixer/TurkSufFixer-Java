@@ -188,6 +188,9 @@ public class TurkSufFixer {
     	return suffix;
     }
     private boolean checkCompoundNoun(String name){
+    	if (name.endsWith("oğlu")){
+    		return true;
+    	}
     	Hashtable<String,String> probablesuff = new Hashtable<String,String>(4);
     	String temp;
     	int len = name.length();
@@ -196,7 +199,7 @@ public class TurkSufFixer {
     		probablesuff.put(surfacetolex(temp),temp);
     	}
    
-    	for(String posssuff : Arrays.asList("lArH","H","yH","sH")){
+    	for(String posssuff : Arrays.asList("lArH","H","yH","sH", "lHğH")){
     		String realsuffix = probablesuff.get(posssuff);
     		if(realsuffix != null){
     			List<StringTuple> wordpairs = divideWord(name,posssuff);
