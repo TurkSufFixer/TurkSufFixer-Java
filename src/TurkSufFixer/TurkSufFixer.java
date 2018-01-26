@@ -344,9 +344,6 @@ public class TurkSufFixer {
     	}
     	if (suffix.contains("H")){
     		suffix = suffix.replace('H', findReplacement(lastVowel, soft));
-    		if (rawsuffix.equals(Suffixes.GEN) && 'n' != suffix.charAt(0) && vowels.contains(name.substring(name.length() - 1))){
-    			suffix = "n" + suffix;
-    		}
     	}
     	else
     	{
@@ -366,9 +363,9 @@ public class TurkSufFixer {
     		
     	}
     	
-    	if (vowels.contains(lastLetter) && 
-    	   (vowels.contains(suffix.substring(0,1)) || rawsuffix.equals(Suffixes.INS))){
-    		suffix = 'y' + suffix;
+    	if (vowels.contains(lastLetter)){
+    	   if (vowels.contains(suffix.substring(0,1)) || rawsuffix.equals(Suffixes.INS))
+    		   suffix = (!rawsuffix.equals(Suffixes.GEN) ? 'y' : 'n') + suffix;
     	}
     	return suffix;
     }
