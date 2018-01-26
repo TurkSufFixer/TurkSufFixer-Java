@@ -94,7 +94,6 @@ public class TurkSufFixer {
 					others.put(line, line + (line.endsWith("k") ? 'a' : 'e'));
 				}
 			}
-			dictionary.addAll(others.keySet());
 		} catch (IOException e) {
 			throw new DictionaryNotFound(e.getMessage());
 		}  
