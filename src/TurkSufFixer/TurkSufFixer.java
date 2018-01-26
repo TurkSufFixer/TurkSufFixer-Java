@@ -176,8 +176,10 @@ public class TurkSufFixer {
     			break;
     		}
     	}
-    	return ((frontvowels.contains(lastVowelOfName) || isFrontVowel) == (frontvowels.contains(firstVowelOfSuffix))
-    			&& (roundedvowels.contains(lastVowelOfName) == roundedvowels.contains(firstVowelOfSuffix)));
+    	boolean frontness = (frontvowels.contains(lastVowelOfName) || isFrontVowel) == frontvowels.contains(firstVowelOfSuffix);
+    	boolean roundness = roundedvowels.contains(lastVowelOfName) == roundedvowels.contains(firstVowelOfSuffix);
+    	return frontness && (roundness || !H.contains(firstVowelOfSuffix));
+    			
     }
     private String surfacetolex(String suffix){
     	for(StringTuple tTuple : translate_table){
