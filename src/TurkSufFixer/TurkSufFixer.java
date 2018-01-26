@@ -32,6 +32,7 @@ public class TurkSufFixer {
     private static Hashtable<Integer,String> digits;
     private static List<StringTuple> consonantTuple;
     private static List<StringTuple> translate_table;
+    private static List<StringTuple> accent_table;
     private static HashSet<String> dictionary;
     private static HashSet<String> possesive;
     private static HashSet<String> exceptions;
@@ -67,7 +68,11 @@ public class TurkSufFixer {
     	translate_table = new ArrayList<StringTuple>(5);
     	translate_table.add(new StringTuple("ae","A"));
     	translate_table.add(new StringTuple(H,"H"));
-    	
+    	accent_table = new ArrayList<StringTuple>(4);
+    	accent_table.add(new StringTuple("â","e"));
+    	accent_table.add(new StringTuple("î","i"));
+    	accent_table.add(new StringTuple("û","ü"));
+    	accent_table.add(new StringTuple("ô","ö"));
     	try {
 			dictionary = new HashSet<String>(Files.readAllLines(Paths.get(dictpath)));
 			possesive  = new HashSet<String>(Files.readAllLines(Paths.get(posspath)));
@@ -79,7 +84,7 @@ public class TurkSufFixer {
 			Pattern p = Pattern.compile("(\\w+) +-> +(\\w+)",Pattern.UNICODE_CHARACTER_CLASS);
 			Matcher m;
 			for(String line: Files.readAllLines(Paths.get(othpath))){
-				line = line.toLowerCase(turkishCulture).trim();
+				line = turkishSanitize(line);
 				m = p.matcher(line);
 				if (m.find()){
 					others.put(m.group(1), m.group(2));
@@ -150,6 +155,7 @@ public class TurkSufFixer {
     	name = name.substring(0, name.length() - 1) + realsuffix + name.substring(name.length()-1);
     	return haplology.contains(name) ? name : "";
     }
+    
     private boolean checkConsonantHarmony(String name, String suffix){
     	if("H".equals(suffix)){
     		for(StringTuple cTuple : consonantTuple){
@@ -181,6 +187,7 @@ public class TurkSufFixer {
     	return frontness && (roundness || !H.contains(firstVowelOfSuffix));
     			
     }
+    
     private String surfacetolex(String suffix){
     	for(StringTuple tTuple : translate_table){
     		for(int i = 0; i < tTuple.first.length(); i++){
@@ -216,6 +223,7 @@ public class TurkSufFixer {
     	}
     	return false;
     }
+    
     private boolean checkExceptionalWord(String name){
     	for(StringTuple word : divideWord(name,"")){
     		if(!"".equals(word.first) && exceptions.contains(word.second))
@@ -223,54 +231,72 @@ public class TurkSufFixer {
     	}
     	return false;
     }
+    
     public String makeAccusative(String name) throws SuffixException{
     	return constructName(name, Suffixes.ACC, true);
     }
+    
     public String makeAccusative(String name, Boolean apostrophe) throws SuffixException{
     	return constructName(name, Suffixes.ACC, apostrophe);
     }
+    
+    
     public String makeDative(String name) throws SuffixException{
     	return constructName(name, Suffixes.DAT, true);
     }
+    
     public String makeDative(String name, Boolean apostrophe) throws SuffixException{
     	return constructName(name, Suffixes.DAT, apostrophe);
     }
+    
     public String makeLocative(String name) throws SuffixException{
     	return constructName(name, Suffixes.LOC, true);
     }
+    
     public String makeLocative(String name, Boolean apostrophe) throws SuffixException{
     	return constructName(name, Suffixes.LOC, apostrophe);
     }
+    
     public String makeGenitive(String name) throws SuffixException{
     	return constructName(name, Suffixes.GEN, true);
     }
+    
     public String makeGenitive(String name, Boolean apostrophe) throws SuffixException{
     	return constructName(name, Suffixes.GEN, apostrophe);
     }
+    
     public String makeAblative(String name) throws SuffixException{
     	return constructName(name, Suffixes.ABL, true);
     }
+    
+    
     public String makeAblative(String name, Boolean apostrophe) throws SuffixException{
     	return constructName(name, Suffixes.ABL, apostrophe);
     }
+    
     public String makeInstrumental(String name) throws SuffixException{
     	return constructName(name, Suffixes.INS, true);
     }
+    
     public String makeInstrumental(String name, Boolean apostrophe) throws SuffixException{
     	return constructName(name, Suffixes.INS, apostrophe);
     }
+    
     public String makePlural(String name) throws SuffixException{
     	return constructName(name, Suffixes.PLU, true);
     }
+    
     public String makePlural(String name, Boolean apostrophe) throws SuffixException{
     	return constructName(name, Suffixes.PLU, apostrophe);
     }
+    
     private String constructName(String name, String suffix, Boolean apostrophe) throws SuffixException{
     	return String.format("%s%s%s", name, apostrophe ? "'": "", getSuffix(name,suffix));
     }
+    
     public String getSuffix(String name, String suffix) throws SuffixException{
     	// TODO: bir kere böl bir kere contain kontrolü yap
-    	name = name.trim();
+    	name = turkishSanitize(name);
     	if (name.isEmpty()){
     		throw new EmptyNameException();
     	}
@@ -280,7 +306,7 @@ public class TurkSufFixer {
     	String rawsuffix = suffix;
     	boolean soft = false;
     	String[] words = name.trim().split(" ");
-    	name = words[words.length - 1].toLowerCase(turkishCulture);
+    	name = words[words.length - 1];
     	String lastLetter = name.substring(name.length() - 1);
     	if(H.contains(lastLetter) && (!rawsuffix.equals(Suffixes.INS) && !rawsuffix.equals(Suffixes.PLU)) && 
     	  (words.length > 1 || !dictionary.contains(name)) && (possesive.contains(name) || checkCompoundNoun(name)))
@@ -342,6 +368,7 @@ public class TurkSufFixer {
     	}
     	return suffix;
     }
+    
     private char findReplacement(String lastVowel, boolean soft){
     	if (frontrounded.contains(lastVowel) || (soft && backrounded.contains(lastVowel))){
     		return 'ü';
@@ -353,11 +380,12 @@ public class TurkSufFixer {
     		return 'u';
     	}
     	return 'ı';
-    	
     }
+    
     private boolean isNumber(String number){
     	return number.matches("-?\\d+(\\.\\d+)?");
     }
+    
     private int findLastVowel(String name){
     	for (int i = name.length() - 1; i >= 0; i--){
     		if(vowels.contains(name.substring(i,i+1))){
@@ -366,10 +394,20 @@ public class TurkSufFixer {
     	}
     	return -1;
     }
+    
     public void closeDictionary() throws IOException{
     	if (updated)
     		Files.write(Paths.get(posspath), possesive);
     }
+    
+    private String turkishSanitize(String name){
+    	name = name.toLowerCase(turkishCulture);
+    	for (StringTuple tTuple : accent_table){
+    		name = name.replace(tTuple.first, tTuple.second);
+    	}
+    	return name.trim();
+    }
+    
     public class SuffixException extends Exception{
 		private static final long serialVersionUID = 1L;
     }
