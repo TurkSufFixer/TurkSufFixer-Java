@@ -38,6 +38,7 @@ public class TurkSufFixer {
     private static HashSet<String> exceptions;
     private static HashSet<String> haplology;
     private static Hashtable<String, String> others;
+    private static Pattern time_pattern;
     private static final Locale turkishCulture = Locale.forLanguageTag("tr-TR");
     private boolean updated = false;
     private String posspath   = "sozluk/iyelik.txt";
@@ -59,6 +60,7 @@ public class TurkSufFixer {
     	String exceptpath = "sozluk/istisnalar.txt";
     	String haplopath  = "sozluk/unludusmesi.txt";  	
     	String othpath    = "sozluk/digerleri.txt";
+    	time_pattern = Pattern.compile("([01]?[0-9]|2[0-3])[.:]00", Pattern.UNICODE_CHARACTER_CLASS);
     	consonantTuple = new ArrayList<StringTuple>(5);
     	consonantTuple.add(new StringTuple("ğ","k"));
     	consonantTuple.add(new StringTuple("g","k"));
@@ -101,8 +103,11 @@ public class TurkSufFixer {
     }
 
     private String readNumber(String number){
+    	Matcher m = time_pattern.matcher(number);
+    	if (m.find()){
+    		number = m.group(1);
+    	}
     	int len = number.length();
-    	if (len == 1 && "0".equals(number)) return "sıfır";
     	for(int i = len - 1; i >=0; i-- ){
     		if(number.charAt(i) != '0' && isNumber(Character.toString(number.charAt(i)))){
     			int n = Character.getNumericValue(number.charAt(i));
